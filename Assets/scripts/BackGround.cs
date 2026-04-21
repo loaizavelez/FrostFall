@@ -2,35 +2,78 @@ using UnityEngine;
 
 public class BackGround : MonoBehaviour
 {
-   
-    private float baseSpeed = 2f;    // Velocidad a la que se mueve el fondo
-    private float tileSizeY = 10.07f;   // Tamaño del fondo en el eje Y (ajusta según tu sprite)
-    private float acceleration = 0.2f; // Aceleración para aumentar la velocidad con el tiempo  
-    private float scrollSpeed; // Velocidad actual del scroll, que se actualizará con la aceleración
-    private Vector3 startPos; // Posición inicial del fondo
-    float distance; // Distancia recorrida para el scroll
-    float newPos; // Nueva posición calculada para el scroll
+    private float baseSpeed = 2f;
+    private float acceleration = 0.2f;
+    private float tileSizeY = 10.07f;
+    private float scrollSpeed;
+    private float distanciaAcumulada = 0f;
+    private float tiempoAnterior = 0f;
+    private Vector3 startPos;
+
+    [System.Serializable]
+    public class Tramo
+    {
+        public float distancia;       // distancia en la que se congela
+        public GameObject fondo;      // fondo que aparece en ese tramo
+        [HideInInspector] public bool activado = false;
+    }
+
+    public Tramo[] tramos; // lista de tramos configurables en el inspector
+    private bool scrollDetenido = false;
 
     void Start()
     {
-        startPos = transform.position; // Guardamos la posición inicial del fondo
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        float width = sr.bounds.size.x;
-        float height = sr.bounds.size.y;
-        Debug.Log("Ancho del fondo: " + width + " | Alto del fondo: " + height);
+        startPos = transform.position;
+        tiempoAnterior = Time.time;
+
+        // desactivar todos los fondos al inicio
+        foreach (var t in tramos)
+        {
+            if (t.fondo != null) t.fondo.SetActive(false);
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (scrollDetenido)
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                scrollDetenido = false;
+                tiempoAnterior = Time.time;
+                Debug.Log("Scroll reanudado con tecla C");
+            }
+            return;
+        }
 
-        scrollSpeed = baseSpeed + (Time.time * acceleration); // Aumentamos la velocidad de desplazamiento con el tiempo usando la aceleración
+        float deltaTime = Time.time - tiempoAnterior;
+        tiempoAnterior = Time.time;
 
-        Debug.Log("Velocidad actual del fondo: " + scrollSpeed);
+        scrollSpeed = baseSpeed + (distanciaAcumulada * acceleration);
+        distanciaAcumulada += scrollSpeed * deltaTime;
 
+        float newPos = distanciaAcumulada % tileSizeY;
+        transform.position = startPos + Vector3.up * newPos;
 
-        distance = Time.time * scrollSpeed; // Calculamos la distancia recorrida multiplicando el tiempo por la velocidad
-        newPos = distance % tileSizeY; // reinicio manual con módulo
-        transform.position = startPos + Vector3.up * newPos; // Movemos el fondo hacia arriba sumando la nueva posición calculada a la posición inicial
+        Debug.Log("Velocidad: " + scrollSpeed + " | Distancia actual: " + distanciaAcumulada);
+
+        // revisar cada tramo
+        foreach (var t in tramos)
+        {
+            if (!t.activado && distanciaAcumulada >= t.distancia)
+            {
+                t.activado = true;
+                scrollDetenido = true; // congelar scroll
+
+                if (t.fondo != null)
+                {
+                    t.fondo.SetActive(true);
+                    t.fondo.transform.position = transform.position;
+                }
+
+                Debug.Log("Fin de tramo en distancia: " + t.distancia + ". Pulsa C para continuar...");
+                break; // salir del foreach para no activar varios a la vez
+            }
+        }
     }
 }
