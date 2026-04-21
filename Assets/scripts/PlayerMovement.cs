@@ -2,15 +2,20 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public float speedX = 5f;   // velocidad lateral
+    private Rigidbody2D rb;
+    private float moveX;
+
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        moveX = Input.GetAxis("Horizontal"); // teclas A/D o flechas
+        rb.linearVelocity = new Vector2(moveX * speedX, 0f);
+
+       
     }
 }
