@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37363d973449f464085b0388805c572d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Obstacles
+  scrollSpeed: 2
 --- !u!61 &7840757300968948547
 BoxCollider2D:
   m_ObjectHideFlags: 0

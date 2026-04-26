@@ -57,7 +57,7 @@ public class TrackManager : MonoBehaviour
         float newPos = distanciaAcumulada % tileSizeY;
         transform.position = startPos + Vector3.up * newPos;
 
-        Debug.Log("Velocidad: " + scrollSpeed + " | Distancia actual: " + distanciaAcumulada);
+        
 
         // Pausa automática cada intervalo
         if (distanciaAcumulada >= siguientePausa)
@@ -76,7 +76,7 @@ public class TrackManager : MonoBehaviour
 
     void SpawnObstaculo()
     {
-        int tipo = Random.Range(0, 3); // 0 = piedra, 1 = nieve, 2 = árbol
+        int tipo = Random.Range(0, 3);
         GameObject prefab = null;
 
         switch (tipo)
@@ -88,18 +88,18 @@ public class TrackManager : MonoBehaviour
 
         if (prefab != null)
         {
-            // Ajustar al ancho real de la pista (10.07)
+            // ancho de la pista = 10.07
             float halfWidth = tileSizeY / 2f; // = 5.035
             float randomX = Random.Range(-halfWidth, halfWidth);
 
-            // Borde superior de la cámara
-            float camTop = Camera.main.transform.position.y + Camera.main.orthographicSize;
+            // borde inferior de la cámara
+            float camBottom = Camera.main.transform.position.y - Camera.main.orthographicSize;
 
-            Vector3 spawnPos = new Vector3(randomX, camTop + 1f, 0f);
+            Vector3 spawnPos = new Vector3(randomX, camBottom - 1f, 0f);
 
             GameObject obj = Instantiate(prefab, spawnPos, Quaternion.identity);
 
-            // Asignar velocidad al script Obstaculo
+            // asignar velocidad al script Obstaculo
             Obstacles o = obj.GetComponent<Obstacles>();
             if (o != null)
             {
