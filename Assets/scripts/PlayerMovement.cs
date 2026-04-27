@@ -14,9 +14,17 @@ public class PlayerMovement : MonoBehaviour
     private float camLeft;
     private float camRight;
 
+    //Configuracion game over
+    private int MaxChoques = 3;
+    private int choques = 0;
+
 
     // Variable temporal para ajustar posición
     private Vector3 pos;
+
+
+    /*private float scrollSpeed;
+    private float distanciaAcumulada;*/
 
     void Start()
     {
@@ -43,5 +51,34 @@ public class PlayerMovement : MonoBehaviour
         pos.x = Mathf.Clamp(pos.x, camLeft + 0.5f, camRight - 0.5f);
         transform.position = pos;
 
+
+
+        /*scrollSpeed = Mathf.Abs(rb.velocity.x); // velocidad lateral
+        distanciaAcumulada += scrollSpeed * Time.deltaTime;*/
+
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Obstaculo"))
+        {
+            choques++;
+            Debug.Log("Choque #" + choques);
+
+            if (choques >= MaxChoques)
+            {
+                FindObjectOfType<GameManager>().GameOver();
+            }
+        }
+    }
+
+    /* public float GetVelocidad()
+     {
+         return scrollSpeed;
+     }
+
+     public float GetDistancia()
+     {
+         return distanciaAcumulada;
+     }*/
 }
