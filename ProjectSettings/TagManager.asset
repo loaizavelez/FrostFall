@@ -3,8 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags:
-  - Obstaculo
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -39,8 +38,17 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Fondo
+    uniqueID: 1209706761
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 1231700025
+    locked: 0
+  - name: Obstaculos
+    uniqueID: 4264770625
     locked: 0
   m_RenderingLayers:
   - Default

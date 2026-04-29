@@ -1,84 +1,51 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public float speedX = 5f;
+    public float tiempoInvulnerable = 1.5f;
+    public bool esInvulnerable = false;
 
-    // Configuración de movimiento
-    public float speedX = 5f;   // velocidad lateral
     private Rigidbody2D rb;
     private float moveX;
-    private SpriteRenderer spriteRenderer;
-
-    // Variables para limitar movimiento dentro de la cámara
-    private float halfWidth;
-    private float camLeft;
-    private float camRight;
-
-    //Configuracion game over
-    private int MaxChoques = 3;
-    private int choques = 0;
-
-
-    // Variable temporal para ajustar posición
-    private Vector3 pos;
-
-
-    /*private float scrollSpeed;
-    private float distanciaAcumulada;*/
+    private SpriteRenderer sprite;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        sprite = GetComponent<SpriteRenderer>();
     }
+
     void Update()
     {
         moveX = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveX * speedX, rb.velocity.y);
 
-        // Flip del sprite según dirección
-        if (moveX < 0)
-            spriteRenderer.flipX = false; // mirando a la derecha
-        else if (moveX > 0)
-            spriteRenderer.flipX = true;  // mirando a la izquierda
-        halfWidth = Camera.main.orthographicSize * Camera.main.aspect;
-        camLeft = Camera.main.transform.position.x - halfWidth;
-        camRight = Camera.main.transform.position.x + halfWidth;
-
-
-        // Limitar posición del jugador dentro de la cámara
-        pos = transform.position;
-        pos.x = Mathf.Clamp(pos.x, camLeft + 0.5f, camRight - 0.5f);
-        transform.position = pos;
-
-
-
-        /*scrollSpeed = Mathf.Abs(rb.velocity.x); // velocidad lateral
-        distanciaAcumulada += scrollSpeed * Time.deltaTime;*/
-
+        rb.linearVelocity = new Vector2(moveX * speedX + rb.linearVelocity.x * 0.9f, 0f);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    public void ActivarInvulnerabilidad()
     {
-        if (other.CompareTag("Obstaculo"))
+        if (!esInvulnerable)
         {
-            choques++;
-            Debug.Log("Choque #" + choques);
-
-            if (choques >= MaxChoques)
-            {
-                FindObjectOfType<GameManager>().GameOver();
-            }
+            StartCoroutine(InvulnerabilidadCoroutine());
         }
     }
 
-    /* public float GetVelocidad()
-     {
-         return scrollSpeed;
-     }
+    private IEnumerator InvulnerabilidadCoroutine()
+    {
+        esInvulnerable = true;
 
-     public float GetDistancia()
-     {
-         return distanciaAcumulada;
-     }*/
+        // Efecto visual de parpadeo
+        float tiempoPasado = 0;
+        while (tiempoPasado < tiempoInvulnerable)
+        {
+            sprite.enabled = !sprite.enabled;
+            yield return new WaitForSeconds(0.1f);
+            tiempoPasado += 0.1f;
+        }
+
+        sprite.enabled = true;
+        esInvulnerable = false;
+    }
 }
