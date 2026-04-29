@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TrackManager : MonoBehaviour
 {
+    public string shopSceneName = "Tienda";
     public float baseSpeed = 2f;
     public float acceleration = 0.2f;
     public float tileSizeY = 10.07f;
@@ -56,6 +58,7 @@ public class TrackManager : MonoBehaviour
         if (distanciaAcumulada >= siguientePausa)
         {
             scrollDetenido = true;
+            SceneManager.LoadScene(shopSceneName);
         }
     }
 }
