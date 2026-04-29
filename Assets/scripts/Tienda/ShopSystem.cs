@@ -19,7 +19,7 @@ public class ShopSystem : MonoBehaviour
 
     void Start()
     {
-        Coin = 0; 
+        Coin = 20; 
         Coin_text.text = Coin.ToString();
     }
 
