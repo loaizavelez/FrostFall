@@ -1085,6 +1085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15b0639e668414f4ca5b4db7c81cc6b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrackManager
+  shopSceneName: Tienda
   baseSpeed: 2
   acceleration: 0.5
   tileSizeY: 10.07

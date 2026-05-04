@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class TrackManager : MonoBehaviour
 {
+    [Header("Configuración de la Tienda")]
     public string shopSceneName = "Tienda";
     public float baseSpeed = 2f;
     public float acceleration = 0.2f;
@@ -50,7 +51,7 @@ public class TrackManager : MonoBehaviour
         transform.position = startPos + Vector3.up * newPos;
 
         // Verificar si estamos cerca del final para dejar de spawnear
-        if (distanciaAcumulada >= (distanciaParaMeta - distanciaAvisoFinal))
+        if (distanciaAcumulada >= (distanciaParaMeta - distanciaAvisoFinal)) 
         {
             limpiandoObstaculos = true;
         }

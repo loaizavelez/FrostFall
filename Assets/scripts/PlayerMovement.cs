@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
     public float tiempoInvulnerable = 1.5f;
     public bool esInvulnerable = false;
 
+
+    
     private Rigidbody2D rb;
     private float moveX;
     private SpriteRenderer sprite;
